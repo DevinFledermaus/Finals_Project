@@ -129,7 +129,7 @@ def user_registration():
 
 
 # Function to add products to the cart
-@app.route('/add-product/', methods=["POST"])
+@app.route('/add-comic/', methods=["POST"])
 @jwt_required()
 def add_product():
     response = {}
@@ -156,7 +156,7 @@ def add_product():
 
 
 # function to view the entire cart
-@app.route('/get-cart/', methods=["GET"])
+@app.route('/view-all/', methods=["GET"])
 def get_cart():
     response = {}
     with sqlite3.connect("POS.db") as conn:
@@ -171,7 +171,7 @@ def get_cart():
 
 
 # function to remove a product from cart
-@app.route("/remove-product/<int:product_id>")
+@app.route("/remove-comic/<int:product_id>")
 @jwt_required()
 def remove_product(product_id):
     response = {}
@@ -185,7 +185,7 @@ def remove_product(product_id):
 
 
 # function to edit a specific characteristic of a product
-@app.route('/edit-product/<int:product_id>/', methods=["PUT"])
+@app.route('/edit-comic/<int:product_id>/', methods=["PUT"])
 @jwt_required()
 def edit_product(product_id):
     response = {}
