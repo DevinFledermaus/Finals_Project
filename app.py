@@ -98,7 +98,7 @@ def protected():
 
 
 # Function to register users
-@app.route('/user-registration/', methods=["POST"])
+@app.route('/registration/', methods=["POST"])
 def user_registration():
     response = {}
 
