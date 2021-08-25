@@ -151,7 +151,7 @@ def add_product():
                            "price,"
                            "category,"
                            "era,"
-                           "date_created) VALUES(?, ?, ?, ?, ?)", (title, description, price, category, era, date_created))
+                           "date_created) VALUES(?, ?, ?, ?, ?, ?)", (title, description, price, category, era, date_created))
             conn.commit()
             response["status_code"] = 201
             response['description'] = "Product added successfully"
