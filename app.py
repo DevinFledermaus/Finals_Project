@@ -16,7 +16,7 @@ class User(object):
 
 
 def fetch_users():
-    with sqlite3.connect('finals.db') as conn:
+    with sqlite3.connect('project.db') as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM user")
         users = cursor.fetchall()
@@ -29,7 +29,7 @@ def fetch_users():
 
 
 def init_user_table():
-    conn = sqlite3.connect('finals.db')
+    conn = sqlite3.connect('project.db')
     print("Opened database successfully")
     # creating user table
     conn.execute("CREATE TABLE IF NOT EXISTS user(user_id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -42,13 +42,14 @@ def init_user_table():
 
 
 def init_comic_table():
-    with sqlite3.connect('finals.db') as conn:
+    with sqlite3.connect('project.db') as conn:
         # creating product table
         conn.execute("CREATE TABLE IF NOT EXISTS comics(id INTEGER PRIMARY KEY AUTOINCREMENT,"
                      "title TEXT NOT NULL,"
                      "description TEXT NOT NULL,"
                      "price TEXT NOT NULL,"
                      "category TEXT NOT NULL,"
+                     "era TEXT NOT NULL,"
                      "date_created TEXT NOT NULL)")
     print("comics table created successfully.")
 
@@ -110,7 +111,7 @@ def user_registration():
         password = request.form['password']
         email = request.form['email']
 
-        with sqlite3.connect("finals.db") as conn:
+        with sqlite3.connect("project.db") as conn:
             cursor = conn.cursor()
             cursor.execute("INSERT INTO user("
                            "first_name,"
@@ -139,16 +140,18 @@ def add_product():
         description = request.form['description']
         price = request.form['price']
         category = request.form['category']
+        era = request.form['era']
         date_created = datetime.datetime.now()
 
-        with sqlite3.connect('finals.db') as conn:
+        with sqlite3.connect('project.db') as conn:
             cursor = conn.cursor()
             cursor.execute("INSERT INTO comics("
                            "title,"
                            "description,"
                            "price,"
                            "category,"
-                           "date_created) VALUES(?, ?, ?, ?, ?)", (title, description, price, category, date_created))
+                           "era,"
+                           "date_created) VALUES(?, ?, ?, ?, ?)", (title, description, price, category, era, date_created))
             conn.commit()
             response["status_code"] = 201
             response['description'] = "Product added successfully"
@@ -159,7 +162,7 @@ def add_product():
 @app.route('/view-all/', methods=["GET"])
 def get_cart():
     response = {}
-    with sqlite3.connect("finals.db") as conn:
+    with sqlite3.connect("project.db") as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM comics")
 
@@ -175,7 +178,7 @@ def get_cart():
 @jwt_required()
 def remove_product(product_id):
     response = {}
-    with sqlite3.connect("finals.db") as conn:
+    with sqlite3.connect("project.db") as conn:
         cursor = conn.cursor()
         cursor.execute("DELETE FROM comics WHERE id=" + str(product_id))
         conn.commit()
@@ -191,22 +194,23 @@ def edit_product(product_id):
     response = {}
 
     if request.method == "PUT":
-        with sqlite3.connect('finals.db') as conn:
+        with sqlite3.connect('project.db') as conn:
             incoming_data = dict(request.json)
             put_data = {}
 
             if incoming_data.get("title") is not None:
                 put_data["title"] = incoming_data.get("title")
-                with sqlite3.connect('finals.db') as conn:
+                with sqlite3.connect('project.db') as conn:
                     cursor = conn.cursor()
                     cursor.execute("UPDATE comics SET title =? WHERE id=?", (put_data["title"], product_id))
                     conn.commit()
+
                     response['message'] = "Update to title was successful"
                     response['status_code'] = 200
             if incoming_data.get("description") is not None:
                 put_data['description'] = incoming_data.get('description')
 
-                with sqlite3.connect('finals.db') as conn:
+                with sqlite3.connect('project.db') as conn:
                     cursor = conn.cursor()
                     cursor.execute("UPDATE comics SET description =? WHERE id=?", (put_data["description"], product_id))
                     conn.commit()
@@ -216,7 +220,7 @@ def edit_product(product_id):
             if incoming_data.get("price") is not None:
                 put_data['price'] = incoming_data.get('price')
 
-                with sqlite3.connect('finals.db') as conn:
+                with sqlite3.connect('project.db') as conn:
                     cursor = conn.cursor()
                     cursor.execute("UPDATE comics SET price =? WHERE id=?", (put_data["price"], product_id))
                     conn.commit()
@@ -226,12 +230,22 @@ def edit_product(product_id):
             if incoming_data.get("category") is not None:
                 put_data['category'] = incoming_data.get('category')
 
-                with sqlite3.connect('finals.db') as conn:
+                with sqlite3.connect('project.db') as conn:
                     cursor = conn.cursor()
                     cursor.execute("UPDATE comics SET category =? WHERE id=?", (put_data["category"], product_id))
                     conn.commit()
 
                     response["category"] = "Update to category was successful"
+                    response["status_code"] = 200
+            if incoming_data.get("era") is not None:
+                put_data['era'] = incoming_data.get('era')
+
+                with sqlite3.connect('project.db') as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("UPDATE comics SET era =? WHERE id=?", (put_data["era"], product_id))
+                    conn.commit()
+
+                    response["era"] = "Update to era was successful"
                     response["status_code"] = 200
     return response
 
