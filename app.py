@@ -136,26 +136,31 @@ def add_product():
     response = {}
 
     if request.method == "POST":
-        title = request.form['title']
-        description = request.form['description']
-        price = request.form['price']
-        category = request.form['category']
-        era = request.form['era']
-        date_created = datetime.datetime.now()
-
-        with sqlite3.connect('project.db') as conn:
-            cursor = conn.cursor()
-            cursor.execute("INSERT INTO comics("
-                           "title,"
-                           "description,"
-                           "price,"
-                           "category,"
-                           "era,"
-                           "date_created) VALUES(?, ?, ?, ?, ?, ?)", (title, description, price, category, era, date_created))
-            conn.commit()
-            response["status_code"] = 201
-            response['description'] = "Product added successfully"
-        return response
+        try:
+            title = request.form['title']
+            description = request.form['description']
+            price = request.form['price']
+            category = request.form['category']
+            era = request.form['era']
+            date_created = datetime.datetime.now()
+            with sqlite3.connect('project.db') as conn:
+                cursor = conn.cursor()
+                cursor.execute("INSERT INTO comics("
+                               "title,"
+                               "description,"
+                               "price,"
+                               "category,"
+                               "era,"
+                               "date_created) VALUES(?, ?, ?, ?, ?, ?)", (title, description, price, category, era, date_created))
+                conn.commit()
+                response["status_code"] = 201
+                response['description'] = "Product added successfully"
+        except Exception as x:
+            conn.rollback()
+            response['description'] = "Error occurred adding comic: " + str(x)
+        finally:
+            conn.close()
+            return response
 
 
 # function to view the entire cart
