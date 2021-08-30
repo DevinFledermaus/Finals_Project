@@ -289,7 +289,7 @@ def add_character():
             description = request.form['description']
             with sqlite3.connect('project.db') as conn:
                 cursor = conn.cursor()
-                cursor.execute("INSERT INTO comics("
+                cursor.execute("INSERT INTO characters("
                                "name,"
                                "alias,"
                                "debut,"
