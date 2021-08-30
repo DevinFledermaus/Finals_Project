@@ -54,8 +54,24 @@ def init_comic_table():
     print("comics table created successfully.")
 
 
+def init_character_table():
+    with sqlite3.connect('project.db') as conn:
+        # creating characters table
+        conn.execute("CREATE TABLE IF NOT EXISTS characters (id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                     "name TEXT NOT NULL,"
+                     "alias TEXT NOT NULL,"
+                     "debut TEXT NOT NULL,"
+                     "species TEXT NOT NULL,"
+                     "universe TEXT NOT NULL,"
+                     "powers_abilities TEXT NOT NULL,"
+                     "quote TEXT NOT NULL,"
+                     "description TEXT NOT NULL)")
+    print("characters table created successfully.")
+
+
 init_user_table()
 init_comic_table()
+init_character_table()
 
 users = fetch_users()
 
@@ -252,6 +268,73 @@ def edit_product(product_id):
 
                     response["era"] = "Update to era was successful"
                     response["status_code"] = 200
+    return response
+
+
+# Function to add character to the cart
+@app.route('/add-character/', methods=["POST"])
+@jwt_required()
+def add_character():
+    response = {}
+
+    if request.method == "POST":
+        try:
+            name = request.form['name']
+            alias = request.form['alias']
+            debut = request.form['debut']
+            species = request.form['species']
+            universe = request.form['universe']
+            powers_abilites = request.form['powers_abilities']
+            quote = request.form['quote']
+            description = request.form['description']
+            with sqlite3.connect('project.db') as conn:
+                cursor = conn.cursor()
+                cursor.execute("INSERT INTO comics("
+                               "name,"
+                               "alias,"
+                               "debut,"
+                               "species,"
+                               "universe,"
+                               "powers_abilities,"
+                               "quote,"
+                               "description) VALUES(?, ?, ?, ?, ?, ?, ?, ?)", (name, alias, debut, species, universe, powers_abilites, quote, description))
+                conn.commit()
+                response["status_code"] = 201
+                response['description'] = "Character added successfully"
+        except Exception as x:
+            conn.rollback()
+            response['description'] = "Error occurred adding character: " + str(x)
+        finally:
+            conn.close()
+            return response
+
+
+# function to view the entire cart
+@app.route('/view-characters/', methods=["GET"])
+def get_characters():
+    response = {}
+    with sqlite3.connect("project.db") as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM characters")
+
+        characters = cursor.fetchall()
+
+    response['status_code'] = 200
+    response['data'] = characters
+    return response
+
+
+# function to remove a product from cart
+@app.route("/remove-character/<int:character_id>")
+@jwt_required()
+def remove_character(character_id):
+    response = {}
+    with sqlite3.connect("project.db") as conn:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM characters WHERE id=" + str(character_id))
+        conn.commit()
+        response['status_code'] = 200
+        response['message'] = "Character removed successfully."
     return response
 
 
