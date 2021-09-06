@@ -371,7 +371,7 @@ def edit_character(character_id):
                     cursor.execute("UPDATE characters SET powers_abilities =? WHERE id=?", (put_data["powers_abilities"], character_id))
                     conn.commit()
 
-                    response['message'] = "Update to Powers/Abilities was successful"
+                    response['message'] = "Update to powers_abilities was successful"
                     response['status_code'] = 200
     return response
 
