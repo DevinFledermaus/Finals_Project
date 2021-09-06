@@ -1,11 +1,13 @@
 import hmac
 import sqlite3
 import datetime
+import cloudinary
 
 from flask import Flask, request
 from flask_jwt import JWT, jwt_required, current_identity
 from flask_cors import CORS
 from flask_mail import Mail, Message
+from cloudinary import uploader
 
 
 class User(object):
@@ -158,7 +160,20 @@ def add_product():
             price = request.form['price']
             category = request.form['category']
             era = request.form['era']
+            img = request.files['img']
             date_created = datetime.datetime.now()
+
+            cloudinary.config(cloud_name='djz8milxs', api_key='256147418286324',
+                              api_secret='tOJ5yb9Qq91dmeTzJBD5Gyyu6Kg')
+            upload_result = None
+
+            app.logger.info('%s file_to_upload', img)
+            if img:
+                upload_result = cloudinary.uploader.upload(img)   # Upload results
+                app.logger.info(upload_result)
+                # data = jsonify(upload_result)
+                upload_result['url']
+
             with sqlite3.connect('project.db') as conn:
                 cursor = conn.cursor()
                 cursor.execute("INSERT INTO comics("
@@ -335,6 +350,29 @@ def remove_character(character_id):
         conn.commit()
         response['status_code'] = 200
         response['message'] = "Character removed successfully."
+    return response
+
+
+# function to edit a specific characteristic of a product
+@app.route('/edit-character/<int:character_id>/', methods=["PUT"])
+@jwt_required()
+def edit_character(character_id):
+    response = {}
+
+    if request.method == "PUT":
+        with sqlite3.connect('project.db') as conn:
+            incoming_data = dict(request.json)
+            put_data = {}
+
+            if incoming_data.get("description") is not None:
+                put_data["description"] = incoming_data.get("description")
+                with sqlite3.connect('project.db') as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("UPDATE characters SET description =? WHERE id=?", (put_data["description"], character_id))
+                    conn.commit()
+
+                    response['message'] = "Update to description was successful"
+                    response['status_code'] = 200
     return response
 
 
