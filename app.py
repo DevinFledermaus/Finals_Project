@@ -364,14 +364,14 @@ def edit_character(character_id):
             incoming_data = dict(request.json)
             put_data = {}
 
-            if incoming_data.get("description") is not None:
-                put_data["description"] = incoming_data.get("description")
+            if incoming_data.get("power_abilities") is not None:
+                put_data["powers_abilities"] = incoming_data.get("powers_abilities")
                 with sqlite3.connect('project.db') as conn:
                     cursor = conn.cursor()
-                    cursor.execute("UPDATE characters SET description =? WHERE id=?", (put_data["description"], character_id))
+                    cursor.execute("UPDATE characters SET powers_abilities =? WHERE id=?", (put_data["powers_abilities"], character_id))
                     conn.commit()
 
-                    response['message'] = "Update to description was successful"
+                    response['message'] = "Update to Powers/Abilities was successful"
                     response['status_code'] = 200
     return response
 
