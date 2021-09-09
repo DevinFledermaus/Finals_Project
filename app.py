@@ -128,7 +128,7 @@ def user_registration():
         last_name = request.json['last_name']
         username = request.json['username']
         password = request.json['password']
-        email = request.json['email']
+        # email = request.json['email']
 
         with sqlite3.connect("project.db") as conn:
             cursor = conn.cursor()
@@ -141,39 +141,6 @@ def user_registration():
             response["message"] = "success"
             response["status_code"] = 201
     return response
-
-            # if response['status_code'] == 201:
-            #     msg = Message('success', sender='fledermausdevin@gmail.com', recipients=[email])
-            #     msg.body = 'Registration successful.'
-            #     mail.send(msg)
-            #     return "Message sent"
-
-
-# @app.route("/auth/", methods=["POST"])
-# @cross_origin()
-# def auth():
-#     response = {}
-#
-#     if request.method == "POST":
-#
-#         username = request.json['username']
-#         password = request.json['password']
-#
-#         with sqlite3.connect("project.db") as conn:
-#             cursor = conn.cursor()
-#             cursor.execute("SELECT * FROM user WHERE username='{}' AND password='{}'".format(username, password))
-#             user_information = cursor.fetchone()
-#
-#         if user_information:
-#             response["user_info"] = user_information
-#             response["message"] = "Success"
-#             response["status_code"] = 201
-#             return jsonify(response)
-#
-#         else:
-#             response['message'] = "Unsuccessful login, try again"
-#             response['status_code'] = 401
-#             return jsonify(response)
 
 
 # Function to add products to the cart
