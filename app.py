@@ -3,7 +3,7 @@ import sqlite3
 import datetime
 import cloudinary
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_jwt import JWT, jwt_required, current_identity
 from flask_cors import CORS, cross_origin
 from flask_mail import Mail, Message
@@ -146,6 +146,33 @@ def user_registration():
                 msg.body = 'Registration successful.'
                 mail.send(msg)
                 return "Message sent"
+
+
+@app.route("/auth/", methods=["POST"])
+@cross_origin()
+def auth():
+    response = {}
+
+    if request.method == "POST":
+
+        username = request.json['username']
+        password = request.json['password']
+
+        with sqlite3.connect("Hstore.db") as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM user WHERE username='{}' AND password='{}'".format(username, password))
+            user_information = cursor.fetchone()
+
+        if user_information:
+            response["user_info"] = user_information
+            response["message"] = "Success"
+            response["status_code"] = 201
+            return jsonify(response)
+
+        else:
+            response['message'] = "Unsuccessful login, try again"
+            response['status_code'] = 401
+            return jsonify(response)
 
 
 # Function to add products to the cart
