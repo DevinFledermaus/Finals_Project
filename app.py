@@ -140,6 +140,7 @@ def user_registration():
             conn.commit()
             response["message"] = "success"
             response["status_code"] = 201
+            return response
 
             # if response['status_code'] == 201:
             #     msg = Message('success', sender='fledermausdevin@gmail.com', recipients=[email])
