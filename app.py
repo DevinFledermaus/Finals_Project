@@ -159,7 +159,7 @@ def auth():
         username = request.json['username']
         password = request.json['password']
 
-        with sqlite3.connect("Hstore.db") as conn:
+        with sqlite3.connect("project.db") as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM user WHERE username='{}' AND password='{}'".format(username, password))
             user_information = cursor.fetchone()
