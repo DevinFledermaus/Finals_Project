@@ -123,23 +123,26 @@ def user_registration():
     response = {}
 
     if request.method == "POST":
+        try:
+            first_name = request.json['first_name']
+            last_name = request.json['last_name']
+            username = request.json['username']
+            password = request.json['password']
+            # email = request.json['email']
 
-        first_name = request.json['first_name']
-        last_name = request.json['last_name']
-        username = request.json['username']
-        password = request.json['password']
-        # email = request.json['email']
-
-        with sqlite3.connect("project.db") as conn:
-            cursor = conn.cursor()
-            cursor.execute("INSERT INTO user("
-                           "first_name,"
-                           "last_name,"
-                           "username,"
-                           "password) VALUES(?, ?, ?, ?)", (first_name, last_name, username, password))
-            conn.commit()
-            response["message"] = "success"
-            response["status_code"] = 201
+            with sqlite3.connect("project.db") as conn:
+                cursor = conn.cursor()
+                cursor.execute("INSERT INTO user("
+                               "first_name,"
+                               "last_name,"
+                               "username,"
+                               "password) VALUES(?, ?, ?, ?)", (first_name, last_name, username, password))
+                conn.commit()
+                response["message"] = "success"
+                response["status_code"] = 201
+        except ValueError:
+            response['message'] = "Failed to add to library"
+            response['status_code'] = 400
     return response
 
 
