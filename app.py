@@ -1,13 +1,10 @@
 import hmac
 import sqlite3
 import datetime
-import cloudinary
 
 from flask import Flask, request, jsonify
 from flask_jwt import JWT, jwt_required, current_identity
-from flask_cors import CORS, cross_origin
-# from flask_mail import Mail, Message
-from cloudinary import uploader
+from flask_cors import CORS
 
 
 class User(object):
@@ -98,14 +95,13 @@ app.debug = True
 app.config['SECRET_KEY'] = 'super-secret'
 # allows an extension on the token time limit
 app.config['JWT_EXPIRATION_DELTA'] = datetime.timedelta(seconds=4000)
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+CORS(app)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = "fledermausdevin@gmail.com"
 app.config['MAIL_PASSWORD'] = "Fleddy97"
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
-# mail = Mail(app)
 
 jwt = JWT(app, authenticate, identity)
 
@@ -127,7 +123,6 @@ def user_registration():
             last_name = request.json['last_name']
             username = request.json['username']
             password = request.json['password']
-            # email = request.json['email']
 
             with sqlite3.connect("project.db") as conn:
                 cursor = conn.cursor()
