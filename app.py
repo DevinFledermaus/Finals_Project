@@ -5,7 +5,7 @@ import cloudinary
 
 from flask import Flask, request
 from flask_jwt import JWT, jwt_required, current_identity
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from flask_mail import Mail, Message
 from cloudinary import uploader
 
@@ -98,7 +98,7 @@ app.debug = True
 app.config['SECRET_KEY'] = 'super-secret'
 # allows an extension on the token time limit
 app.config['JWT_EXPIRATION_DELTA'] = datetime.timedelta(seconds=4000)
-CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = "fledermausdevin@gmail.com"
@@ -118,6 +118,7 @@ def protected():
 
 # Function to register users
 @app.route('/registration/', methods=["POST"])
+@cross_origin()
 def user_registration():
     response = {}
 
