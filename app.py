@@ -149,31 +149,31 @@ def user_registration():
             #     return "Message sent"
 
 
-@app.route("/auth/", methods=["POST"])
-@cross_origin()
-def auth():
-    response = {}
-
-    if request.method == "POST":
-
-        username = request.json['username']
-        password = request.json['password']
-
-        with sqlite3.connect("project.db") as conn:
-            cursor = conn.cursor()
-            cursor.execute("SELECT * FROM user WHERE username='{}' AND password='{}'".format(username, password))
-            user_information = cursor.fetchone()
-
-        if user_information:
-            response["user_info"] = user_information
-            response["message"] = "Success"
-            response["status_code"] = 201
-            return jsonify(response)
-
-        else:
-            response['message'] = "Unsuccessful login, try again"
-            response['status_code'] = 401
-            return jsonify(response)
+# @app.route("/auth/", methods=["POST"])
+# @cross_origin()
+# def auth():
+#     response = {}
+#
+#     if request.method == "POST":
+#
+#         username = request.json['username']
+#         password = request.json['password']
+#
+#         with sqlite3.connect("project.db") as conn:
+#             cursor = conn.cursor()
+#             cursor.execute("SELECT * FROM user WHERE username='{}' AND password='{}'".format(username, password))
+#             user_information = cursor.fetchone()
+#
+#         if user_information:
+#             response["user_info"] = user_information
+#             response["message"] = "Success"
+#             response["status_code"] = 201
+#             return jsonify(response)
+#
+#         else:
+#             response['message'] = "Unsuccessful login, try again"
+#             response['status_code'] = 401
+#             return jsonify(response)
 
 
 # Function to add products to the cart
