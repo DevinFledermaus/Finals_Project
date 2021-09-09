@@ -140,10 +140,11 @@ def user_registration():
                 conn.commit()
                 response["message"] = "success"
                 response["status_code"] = 201
+                return response
         except ValueError:
             response['message'] = "Failed to add to library"
             response['status_code'] = 400
-    return response
+            return response
 
 
 # Function to add products to the cart
