@@ -205,6 +205,20 @@ def get_cart():
     return response
 
 
+@app.route('/view-users/', methods=["GET"])
+def get_users():
+    response = {}
+    with sqlite3.connect("project.db") as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM user")
+
+        products = cursor.fetchall()
+
+    response['status_code'] = 200
+    response['data'] = products
+    return response
+
+
 # function to remove a product from cart
 @app.route("/remove-comic/<int:product_id>")
 @jwt_required()
