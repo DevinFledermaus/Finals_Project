@@ -192,16 +192,16 @@ def add_product():
             img = request.files['img']
             date_created = datetime.datetime.now()
 
-            cloudinary.config(cloud_name='djz8milxs', api_key='256147418286324',
-                              api_secret='tOJ5yb9Qq91dmeTzJBD5Gyyu6Kg')
-            upload_result = None
-
-            app.logger.info('%s file_to_upload', img)
-            if img:
-                upload_result = cloudinary.uploader.upload(img)   # Upload results
-                app.logger.info(upload_result)
-                # data = jsonify(upload_result)
-                upload_result['url']
+            # cloudinary.config(cloud_name='djz8milxs', api_key='256147418286324',
+            #                   api_secret='tOJ5yb9Qq91dmeTzJBD5Gyyu6Kg')
+            # upload_result = None
+            #
+            # app.logger.info('%s file_to_upload', img)
+            # if img:
+            #     upload_result = cloudinary.uploader.upload(img)   # Upload results
+            #     app.logger.info(upload_result)
+            #     # data = jsonify(upload_result)
+            #     upload_result['url']
 
             with sqlite3.connect('project.db') as conn:
                 cursor = conn.cursor()
