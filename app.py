@@ -6,7 +6,7 @@ import cloudinary
 from flask import Flask, request, jsonify
 from flask_jwt import JWT, jwt_required, current_identity
 from flask_cors import CORS, cross_origin
-from flask_mail import Mail, Message
+# from flask_mail import Mail, Message
 from cloudinary import uploader
 
 
@@ -105,7 +105,7 @@ app.config['MAIL_USERNAME'] = "fledermausdevin@gmail.com"
 app.config['MAIL_PASSWORD'] = "Fleddy97"
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
-mail = Mail(app)
+# mail = Mail(app)
 
 jwt = JWT(app, authenticate, identity)
 
@@ -141,11 +141,11 @@ def user_registration():
             response["message"] = "success"
             response["status_code"] = 201
 
-            if response['status_code'] == 201:
-                msg = Message('success', sender='fledermausdevin@gmail.com', recipients=[email])
-                msg.body = 'Registration successful.'
-                mail.send(msg)
-                return "Message sent"
+            # if response['status_code'] == 201:
+            #     msg = Message('success', sender='fledermausdevin@gmail.com', recipients=[email])
+            #     msg.body = 'Registration successful.'
+            #     mail.send(msg)
+            #     return "Message sent"
 
 
 @app.route("/auth/", methods=["POST"])

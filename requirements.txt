@@ -6,7 +6,6 @@ cloudinary==1.26.0
 Flask==2.0.1
 Flask-Cors==3.0.10
 Flask-JWT==0.3.2
-Flask-Mail==0.9.1
 gunicorn==20.1.0
 heroku==0.1.4
 idna==3.2
