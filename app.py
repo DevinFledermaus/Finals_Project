@@ -334,7 +334,7 @@ def get_characters():
     response['data'] = characters
     return response
 
-
+    
 # function to remove a product from cart
 @app.route("/remove-character/<int:character_id>")
 @jwt_required()
