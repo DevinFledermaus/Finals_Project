@@ -132,6 +132,10 @@ def user_registration():
                                "username,"
                                "password) VALUES(?, ?, ?, ?)", (first_name, last_name, username, password))
                 conn.commit()
+
+                global users
+                users = fetch_users()
+
                 response["message"] = "success"
                 response["status_code"] = 201
                 return response
@@ -334,7 +338,7 @@ def get_characters():
     response['data'] = characters
     return response
 
-    
+
 # function to remove a product from cart
 @app.route("/remove-character/<int:character_id>")
 @jwt_required()
